@@ -1,8 +1,5 @@
 package Code;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * File: Question.java
@@ -48,6 +45,22 @@ abstract public class Question
         String upperKey = letter.toUpperCase();
         this.choices.put(upperKey, descriptionOfLetter);
     }
+
+    /**
+     * Returns A ArrayList of Keys Of the Choices Used
+     * So that the User can Answer the Questions
+     * */
+    public ArrayList<String> getChoiceKeys()
+    {
+        ArrayList<String> answer = new ArrayList<>();
+        Set<String> keys = this.choices.keySet();
+        for(String key: keys)
+        {
+            answer.add(key);
+        }
+        return answer;
+    }
+
 
     /**
      * Returns the Id Of the Given Question

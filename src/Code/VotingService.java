@@ -1,5 +1,6 @@
 package Code;
 
+import javax.swing.plaf.synth.SynthMenuBarUI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -90,7 +91,7 @@ public class VotingService
 
         StudentAndAnswer answersToQuestion = new StudentAndAnswer(student.getId() ,answers);
 
-        //Initializing the ArrayList if it hasn't been initialized
+        //Initializing the ArrayList if it hasn't been initialized in the HashMap
         this.answersToQuestions.putIfAbsent(this.questions.get(this.currentQuestionCounter).getId(),new ArrayList<StudentAndAnswer>());
 
         //Adding the StudentID And Answers That Student Made to its ArrayList At the specified Question
@@ -126,6 +127,15 @@ public class VotingService
     }
 
     /**
+     * Returns an ArrayList Of all the Students in the Voting System
+     * */
+    public ArrayList<Student> getStudents()
+    {
+        return this.students;
+    }
+
+
+    /**
      * Prints the Stats of the Current Question
      * - First It Prints the Question and the Answer or Answers
      * - Then It Displays the Number of students that selected each answer With Their Percentages
@@ -148,31 +158,48 @@ public class VotingService
      * */
     private void getStats(Question question)
     {
+        System.out.println("===========================================");
         //Printing the Question
         System.out.println("Stats For Question:");
-        System.out.println(question);
+        //System.out.println(question);
 
-        ArrayList<String> answers = question.getAnswers(); //Getting the Answers Or Answer to the question
+        ArrayList<String> answers = new ArrayList<>();
+
+        //Getting The Answers Or Answer to the Questions
+        /**To Fix Bug Of True / False Making all answers UpperCase*/
+        for(String element : question.getAnswers())
+        {
+            answers.add(element.toUpperCase()); //Has to Be UpperCase Since Making all Keys UpperCase
+        }
+
 
         int numOfStudents = this.answersToQuestions.get(question.getId()).size(); //Getting the Number of Students that answered this question
-
         int correct = 0; //Number of Students that answered Correctly
 
         //Processing the Data for this question
         for(int i = 0; i < this.answersToQuestions.get(question.getId()).size(); i++)
         {
-            StudentAndAnswer temp = this.answersToQuestions.get(question.getId()).get(i); //Getting a Student and its answers to this question (StudentAndAnswer Object)
+            //Getting a Student and its answers to this question (StudentAndAnswer Object)
+            StudentAndAnswer temp = this.answersToQuestions.get(question.getId()).get(i);
+
             //Checking if this student answered correctly by checking if its answer contains everything from the answer list
             if(answers.containsAll(temp.getAnswers()) && temp.getAnswers().containsAll(answers))
             {
                 correct++; //Incrementing the Stat
             }
         }
+
+
         int incorrect = numOfStudents - correct;
-        double correctPercent = (correct / numOfStudents) * 100;
+
+        double correctPercent = (Double.valueOf(correct) / Double.valueOf(numOfStudents)) * 100;
         double incorrectPercent = 100 - correctPercent;
-        System.out.printf(correct + " Students Answered Correctly: %.2f %\n", correctPercent);
-        System.out.printf(incorrect + " Students Answered Incorrectly: %.2f % \n", incorrectPercent);
+
+        System.out.printf(correct + " Students Answered Correctly: %.2f ", correctPercent);
+        System.out.println("%");
+        System.out.printf(incorrect + " Students Answered Incorrectly: %.2f ", incorrectPercent);
+        System.out.println("%");
+        System.out.println("===========================================");
     }
 
 

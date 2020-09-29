@@ -1,5 +1,6 @@
 package Code;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -13,6 +14,12 @@ import java.util.Random;
  *      - Call the IVote Service Output function to display the Result
  * */
 
+/**
+ * Things To Do:
+ * - Add More Questions And Or More Students
+ * - Add a Stats Feature that displays The amount of correct answers all the students got at the end of the Simulation
+ * - Fully Test Everything Test all The Edge Cases
+ * */
 
 public class SimulationDriver {
 
@@ -45,6 +52,9 @@ public class SimulationDriver {
         Student s_2 = new Student("Jake", "Smith");
         Student s_3 = new Student("Sarah", "Johnson");
         Student s_4 = new Student("Ben", "Dover");
+        Student s_5 = new Student("Bryan");
+        Student s_6 = new Student("Sophie");
+        Student s_7 = new Student("Jessica");
 
         /**Configuring Questions For VotingService Object*/
 
@@ -60,6 +70,10 @@ public class SimulationDriver {
         iVote.addStudent(s_2);
         iVote.addStudent(s_3);
         iVote.addStudent(s_4);
+        iVote.addStudent(s_5);
+        iVote.addStudent(s_6);
+        iVote.addStudent(s_7);
+
 
         /**Randomly Selecting Answers for Each Student on Each Question And Printing the Stats  */
 
@@ -71,25 +85,44 @@ public class SimulationDriver {
             System.out.println("Question (" + i + ")");
             System.out.println(iVote.getCurrentQuestion());
 
-            //Selecting A Answer for each Question
-            for(int j = 0; j < iVote.numOfStudents(); j++)
+            //Each Student Will Select an Answer for each Question
+            for(Student s : iVote.getStudents())
             {
                 //How many answers to pick for this question
                 int amountToPick = 0;
                 //If this is true then Its a SingleAnswered Question
                 if(iVote.getCurrentQuestion().getIsSingleAnswered())
                     amountToPick = 1; //Since Only One Answer Allowed
+
                 //Else its A MultipleAnswerQuestion
                 else
                 {
                     int numOfChoices = iVote.getCurrentQuestion().numOfChoices();
                     amountToPick = rand.nextInt(numOfChoices + 1);
                 }
+                //List of all the Answers the Student Will Answer for this question
+                ArrayList<String> answersFromStudent = new ArrayList<>();
+
+                //Used to Select the Answer for this specific student
+                Random rand_2 = new Random();
+
+                //Getting A ArrayList of all valid Answers for the currentQuestion
+                ArrayList<String> choicesKeys = iVote.getCurrentQuestion().getChoiceKeys();
+
                 //Randomly Choosing amountToPick Times an Answer for this question and for this student
                 for(int k = 0; k < amountToPick; k++)
                 {
-                    iVote.answerCurrentQuestion()
+                    //Randomly Selecting an Answer from the Choices
+
+                    //Getting a Random Integer
+                    int randInt = rand_2.nextInt(choicesKeys.size());
+
+                    String randomAnswer = choicesKeys.get(randInt);
+
+                    //Adding an Answer to the Answer ArrayList
+                    answersFromStudent.add(randomAnswer);
                 }
+                iVote.answerCurrentQuestion(s, answersFromStudent); //Answering the Question
             }
 
             //Print the Stats
