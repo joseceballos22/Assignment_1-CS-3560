@@ -1,6 +1,8 @@
 package Code;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * File: Question.java
@@ -14,11 +16,17 @@ abstract public class Question
     private String question; //question to ask the user
     private HashMap<String, String> choices; //Used to store the choices of the user Key, Value
 
+    private String id; //Each Question will have a Unique ID
+
+    private boolean isSingleAnswer; //Determines if the question is SingleAnswered Type
+
     //Constructors
-    public Question(String question)
+    public Question(String question, boolean isSingleAnswer)
     {
         //Using Already Defined Constructor
         this(question, new HashMap<>());
+        this.id = UUID.randomUUID().toString();
+        this.isSingleAnswer = isSingleAnswer;
     }
 
     public Question(String question, HashMap<String, String> choices)
@@ -42,14 +50,71 @@ abstract public class Question
     }
 
     /**
+     * Returns the Id Of the Given Question
+     * */
+    public String getId()
+    {
+        return this.id;
+    }
+
+    //Returns if its a single answered or not
+    public boolean getIsSingleAnswered()
+    {
+        return this.isSingleAnswer;
+    }
+
+    //Returns the number Of Choices for the question
+    public int numOfChoices()
+    {
+        return this.choices.size();
+    }
+
+
+
+    /**Abstract Methods*/
+
+    /**
      * Adds a Answer to this Question
      * @param answer Answer to Add
      * */
     public abstract void addAnswer(String answer);
 
     /**
-     * Returns a HashSet of all the Answers to this Question
+     * Returns a ArrayList of all the Answers to this Question
      * */
-    public abstract HashSet<String> getAnswers();
+    public abstract ArrayList<String> getAnswers();
+
+
+
+
+
+    @Override
+    public String toString()
+    {
+        String answer = this.question;
+
+        answer += "\n";
+
+        for(String key : this.choices.keySet())
+        {
+            answer += key + " : ";
+            answer += this.choices.get(key) + "\n";
+        }
+
+        return answer;
+    }
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -30,4 +30,19 @@ public class Student {
         this.lastName = lastName;
     }
 
+    public String getId()
+    {
+        return this.id;
+    }
+
+    @Override
+    public String toString()
+    {
+        String answer = "";
+        answer += "ID: " + this.id + "\t";
+        answer += "Name: " + this.firstName + this.lastName;
+        return answer;
+    }
+
+
 }

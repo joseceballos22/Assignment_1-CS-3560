@@ -1,5 +1,6 @@
 package Code;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
@@ -9,12 +10,13 @@ import java.util.HashSet;
 
 public class SingleAnswerQuestion extends Question{
 
-    private HashSet<String> answer; //ONLY ONE ANSWER
+    private ArrayList<String> answer; //ONLY ONE ANSWER
     private int counter = 0; //Used to Ensure Only One Answer is Valid for the given Question
     //Constructor
-    public SingleAnswerQuestion(String question)
+    public SingleAnswerQuestion(String question, boolean isSingleAnswered)
     {
-        super(question);
+        super(question,isSingleAnswered);
+        this.answer = new ArrayList<>(); //Initializing the HashSet
     }
 
     /**
@@ -33,10 +35,10 @@ public class SingleAnswerQuestion extends Question{
     }
 
     /**
-     * Returns a HashSet of all the Answers to this Question
+     * Returns a ArrayList of all the Answers to this Question
      */
     @Override
-    public HashSet<String> getAnswers() {
+    public ArrayList<String> getAnswers() {
         return this.answer;
     }
 }
