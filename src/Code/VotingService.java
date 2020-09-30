@@ -188,8 +188,19 @@ public class VotingService
             answers.add(element.toUpperCase()); //Has to Be UpperCase Since Making all Keys UpperCase
         }
 
-
         int numOfStudents = this.answersToQuestions.get(question.getId()).size(); //Getting the Number of Students that answered this question
+
+
+        /**Prints The Number Of Submissions Each Choice Got*/
+        HashMap<String, Integer> choiceCounter = new HashMap<>(); //Holds the count each Choice got
+
+        ArrayList<String> choices = question.getChoiceKeys(); //Getting A List Of All the Choices
+
+        for(String choice: choices)
+            choiceCounter.putIfAbsent(choice, 0); //Initializing them All To Zero
+
+
+        /**Prints Correct And Incorrect Percentages AND Calculating the Count for Each Choice */
         int correct = 0; //Number of Students that answered Correctly
 
         //Processing the Data for this question
@@ -198,6 +209,13 @@ public class VotingService
             //Getting a Student and its answers to this question (StudentAndAnswer Object)
             StudentAndAnswer temp = this.answersToQuestions.get(question.getId()).get(i);
 
+            //Calculating the Count for Each Choice
+            for(String studentAnswer : temp.getAnswers())
+            {
+                //Adding One
+                choiceCounter.put(studentAnswer, choiceCounter.get(studentAnswer) + 1);
+            }
+
             //Checking if this student answered correctly by checking if its answer contains everything from the answer list
             if(answers.containsAll(temp.getAnswers()) && temp.getAnswers().containsAll(answers))
             {
@@ -205,6 +223,14 @@ public class VotingService
             }
         }
 
+        System.out.println("**** Count Of Each Choice ****");
+        /**Printing the Count of Each Choice*/
+        for(String key : choiceCounter.keySet())
+        {
+            Integer value = choiceCounter.get(key);
+
+            System.out.println(key + " : " + value);
+        }
 
         int incorrect = numOfStudents - correct;
 
