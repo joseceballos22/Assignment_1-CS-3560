@@ -39,8 +39,7 @@ public class Student {
     public String toString()
     {
         String answer = "";
-        answer += "ID: " + this.id + "\t";
-        answer += "Name: " + this.firstName + this.lastName;
+        answer += this.firstName + " " + this.lastName;
         return answer;
     }
 

@@ -85,14 +85,29 @@ public class VotingService
 
         /**
          * Saving the Answer the Student has provided for the current Question
+         * - But First Checks if that Student has Already Answered the Question
          * - Where the Key is the Questions's Id
          * - And the Answers to that question are added to the ArrayList
          * */
 
-        StudentAndAnswer answersToQuestion = new StudentAndAnswer(student.getId() ,answers);
-
-        //Initializing the ArrayList if it hasn't been initialized in the HashMap
+        //First Have To Initialize the ArrayList if it hasn't been initialized in the HashMap
         this.answersToQuestions.putIfAbsent(this.questions.get(this.currentQuestionCounter).getId(),new ArrayList<StudentAndAnswer>());
+
+
+        /**Checking if the student has already answered the question */
+        for(int i = 0; i < this.answersToQuestions.get(questions.get(currentQuestionCounter).getId()).size(); i++)
+        {
+            //The Student Has Already Answered the Question
+            if(this.answersToQuestions.get(questions.get(currentQuestionCounter).getId()).get(i).getStudentId().equals(student.getId()))
+            {
+                //Removing the old answer from the ArrayList of StudentAndAnswer Since The Student Already Answered
+                this.answersToQuestions.get(questions.get(currentQuestionCounter).getId()).remove(i);
+                break; //Breaking out of the loop
+            }
+
+        }
+
+        StudentAndAnswer answersToQuestion = new StudentAndAnswer(student.getId() ,answers);
 
         //Adding the StudentID And Answers That Student Made to its ArrayList At the specified Question
         this.answersToQuestions.get(this.questions.get(this.currentQuestionCounter).getId()).add(answersToQuestion);
@@ -140,14 +155,14 @@ public class VotingService
      * - First It Prints the Question and the Answer or Answers
      * - Then It Displays the Number of students that selected each answer With Their Percentages
      * */
-    public void getCurrentStats()
+    public void getCurrentStats(String questionNum)
     {
         if(this.questions.size() == 0 || this.currentQuestionCounter >= this.questions.size())
             return; //INVALID
         //ELSE
 
         //Printing the Stats of the Current Question
-        this.getStats(this.questions.get(this.currentQuestionCounter));
+        this.getStats(this.questions.get(this.currentQuestionCounter) , questionNum);
     }
     /**
      * Private Helper method
@@ -156,12 +171,13 @@ public class VotingService
      * - Then It Displays the Number of students that selected each answer With Their Percentages
      * @param question Question to get the stats from
      * */
-    private void getStats(Question question)
+    private void getStats(Question question, String questionNum)
     {
         System.out.println("===========================================");
         //Printing the Question
-        System.out.println("Stats For Question:");
+        System.out.println("Stats For Question (" + questionNum + ")" + ":");
         //System.out.println(question);
+        System.out.println("Answer: " + question.getAnswers());
 
         ArrayList<String> answers = new ArrayList<>();
 
@@ -225,10 +241,15 @@ public class VotingService
 
         public StudentAndAnswer(String id, ArrayList<String> answers) {
             this.id = id;
-            this.answers = answers;
+            this.answers = new ArrayList<>();
+            //Making the answers all uppercase
+            for(String a: answers)
+            {
+                this.answers.add(a.toUpperCase());
+            }
         }
 
-        public String getId() {
+        public String getStudentId() {
             return this.id;
         }
 

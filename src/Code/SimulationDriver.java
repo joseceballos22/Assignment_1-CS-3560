@@ -14,13 +14,6 @@ import java.util.Random;
  *      - Call the IVote Service Output function to display the Result
  * */
 
-/**
- * Things To Do:
- * - Add More Questions And Or More Students
- * - Add a Stats Feature that displays The amount of correct answers all the students got at the end of the Simulation
- * - Fully Test Everything Test all The Edge Cases
- * */
-
 public class SimulationDriver {
 
     public static void main(String[] args)
@@ -32,7 +25,7 @@ public class SimulationDriver {
         q_1.addChoice("C", "The Sun's Color is Blue");
         q_1.addAnswer("A"); //Setting Answer
 
-        MultipleAnswerQuestion q_2 = new MultipleAnswerQuestion("Multple Answers May Apply: Which of the Following Are Countries ?", false);
+        MultipleAnswerQuestion q_2 = new MultipleAnswerQuestion("Multiple Answers May Apply: Which of the Following Are Countries ?", false);
         q_2.addChoice("A", "California");
         q_2.addChoice("B", "China");
         q_2.addChoice("C", "Russia");
@@ -46,6 +39,13 @@ public class SimulationDriver {
         q_3.addChoice("False", "");
         q_3.addAnswer("False");
 
+        MultipleAnswerQuestion q_4 = new MultipleAnswerQuestion("Multiple Answers May Apply: Which Of the Following are NOT Colors ?", false);
+        q_4.addChoice("A", "Blue");
+        q_4.addChoice("B", "Pink");
+        q_4.addChoice("C", "Water");
+        q_4.addChoice("D", "Yellow");
+        q_4.addAnswer("C"); //Setting Answer
+
         /**Creating Students*/
 
         Student s_1 = new Student("John");
@@ -55,6 +55,9 @@ public class SimulationDriver {
         Student s_5 = new Student("Bryan");
         Student s_6 = new Student("Sophie");
         Student s_7 = new Student("Jessica");
+        Student s_8 = new Student("Jimmy");
+        Student s_9 = new Student("Bill");
+        Student s_10 = new Student("Karen");
 
         /**Configuring Questions For VotingService Object*/
 
@@ -64,6 +67,7 @@ public class SimulationDriver {
         iVote.addQuestion(q_1);
         iVote.addQuestion(q_2);
         iVote.addQuestion(q_3);
+        iVote.addQuestion(q_4);
 
         //Adding Students To Voting System
         iVote.addStudent(s_1);
@@ -73,6 +77,9 @@ public class SimulationDriver {
         iVote.addStudent(s_5);
         iVote.addStudent(s_6);
         iVote.addStudent(s_7);
+        iVote.addStudent(s_8);
+        iVote.addStudent(s_9);
+        iVote.addStudent(s_10);
 
 
         /**Randomly Selecting Answers for Each Student on Each Question And Printing the Stats  */
@@ -82,7 +89,7 @@ public class SimulationDriver {
         for(int i = 0; i < iVote.numOfQuestions(); i++)
         {
             //Printing the Question
-            System.out.println("Question (" + i + ")");
+            System.out.println("Question (" + (i+1) + ")");
             System.out.println(iVote.getCurrentQuestion());
 
             //Each Student Will Select an Answer for each Question
@@ -123,15 +130,70 @@ public class SimulationDriver {
                     answersFromStudent.add(randomAnswer);
                 }
                 iVote.answerCurrentQuestion(s, answersFromStudent); //Answering the Question
+                System.out.println("Student: " + s + " Has Just Answered Question (" + (i+1) + ")");
             }
 
             //Print the Stats
-            iVote.getCurrentStats();
+            iVote.getCurrentStats(String.valueOf(i+1));
 
             //Go to the Next Question
             iVote.nextQuestion();
         }
 
+
+        /**
+         * Testing Certain Edge Cases
+         *  - Multiple Submissions To Same Question From Same Student
+         *  - A Student Forgets to Answer Question
+         * */
+
+        VotingService test = new VotingService();
+        SingleAnswerQuestion q_test = new SingleAnswerQuestion("Is California Known for its Sunny Weather ?",true);
+
+        /**Creating a Test Question **/
+        q_test.addChoice("True", "");
+        q_test.addChoice("False", "");
+        q_test.addAnswer("True");
+
+        /**Creating a Test Student*/
+        Student s_test = new Student("Tester");
+
+        /**Adding the Test questions and Students to the Voting Service*/
+        test.addQuestion(q_test);
+        test.addStudent(s_test);
+
+        ArrayList<String> testAnswer = new ArrayList<String>();
+        testAnswer.add("False");
+
+        ArrayList<String> otherAnswer = new ArrayList<>();
+        otherAnswer.add("True");
+
+
+        System.out.println("-----------------------------TESTING EDGE CASES-----------------------------");
+
+        test.answerCurrentQuestion(s_test,testAnswer); //Answering the Question
+
+        System.out.println("TEST QUESTION: " + test.getCurrentQuestion());
+        test.getCurrentStats("FIRST ANSWER");
+
+
+        System.out.println("-----------------------------STUDENT ANSWERING AGAIN-----------------------------");
+        test.answerCurrentQuestion(s_test,otherAnswer); //Answering the Question Again
+        test.getCurrentStats("SECOND ANSWER");
+
+
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
